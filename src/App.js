@@ -77,9 +77,11 @@ class App extends Component {
 
   
   render() {
+    const { searchTerm, list } = this.state;
     return (
+    
     <div className="App"> 
-      {this.state.list.map(item => 
+      {list.map(item => 
           <div key={item.game}>
               <span>
               <a href={item.url}>{item.title}</a>
@@ -90,10 +92,13 @@ class App extends Component {
           </div>
          )}
          <form>
-          <input type="text" 
-          onChange={this.onSearchChange}/>
+          <input 
+          type="text"
+          value={searchTerm}
+          onChange={this.onSearchChange}
+          />
         </form>
-        {this.state.list.filter(isSearched(this.state.searchTerm)).map( item => item.title)}
+        {list.filter(isSearched(searchTerm)).map( item => item.title)}
     </div>     
     );
   } 
