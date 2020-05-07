@@ -7,7 +7,7 @@ import Login from './components/Login';
 const helloWorld = "Hello World. This is a hot module";
 const list = [
   {
-    id:1,
+    game:1,
     title: 'Fallout',
     year: 1997,
     stars: 4,
@@ -15,7 +15,7 @@ const list = [
   },
 
   {
-    id:2,
+    game:2,
     title: 'Fallout 2',
     year: 1998,
     stars: 5,
@@ -23,7 +23,7 @@ const list = [
   },
 
   {
-    id:3,
+    game:3,
     title: 'Fallout 3',
     year: 2008,
     stars: 4,
@@ -31,7 +31,7 @@ const list = [
   },
      
   {
-    id:4,
+    game:4,
     title: 'Fallout: New Vegas',
     year: 2010,
     stars: 5,
@@ -39,37 +39,64 @@ const list = [
   },
 
   {
-    id:5,
+    game:5,
     title: 'Fallout 4',
     year: 2015,
     stars: 4,
     url:'https://en.wikipedia.org/wiki/Fallout_(series)#Fallout_4_(2015)',
   }
 ];
+ const isSearched = searchTerm => item => {
+    return item.title.toLowerCase().includes(searchTerm.toLowerCase());
+  }
 
 class App extends Component {
-  render () {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      list,
+      searchTerm: '',
+    };
+
+    this.onDismiss = this.onDismiss.bind(this);
+    this.onSearchChange = this.onSearchChange.bind(this);
+
+  }
+
+  onDismiss(id) {
+    const isNotID = item => item.game !== id; 
+    const updatedList = this.state.list.filter(isNotID);
+    this.setState({list: updatedList});
+    console.log("clicked");
+  }
+  onSearchChange(event) { 
+    this.setState({ searchTerm: event.target.value });
+  }
+
+
+  
+  render() {
     return (
-     <div className="App">
-         {this.state.list.map(item) => {
-          <div key={item.id}>
+    <div className="App"> 
+      {this.state.list.map(item => 
+          <div key={item.game}>
               <span>
               <a href={item.url}>{item.title}</a>
-                </span>
-                <span>{item.year}</span>
-                <span>{item.stars}</span>
-                <span>
-                  <button onClick={() => this.onDismiss(item.id)} type="button">
-                Dismiss
-                  </button>
-                </span>
-            </div>);
-            )}
-        </div>
-
-     
-      );
-      } 
+              </span>
+              <button onClick={() => this.onDismiss(item.game)} type="button">Dismiss</button>
+              <span>{item.year}</span>
+              <span>{item.stars}</span>
+          </div>
+         )}
+         <form>
+          <input type="text" 
+          onChange={this.onSearchChange}/>
+        </form>
+        {this.state.list.filter(isSearched(this.state.searchTerm)).map( item => item.title)}
+    </div>     
+    );
+  } 
 }
 
 export default App;
